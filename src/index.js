@@ -60,7 +60,7 @@ async function getSeatData(flight) {
       );
       return;
     }
-    resultSeat.available = false;
+    resultSeat.isAvailable = false;
     resultSeat.preferences = { likesToTalk: seat.likesToTalk };
   });
   const seats = Array.from(resultSeatsByNumber.values());
@@ -80,12 +80,12 @@ async function getMockAmadeusData(seed) {
   for (let y = 0; y < rowCount; y++) {
     for (let x = 0; x < seatsInRow; x++) {
       const number = `${y + 1}${"ABCD"[x]}`;
-      const available = fillFactor * random() < y / rowCount;
+      const isAvailable = fillFactor * random() < y / rowCount;
       const seat = {
         number,
         x: x > 1 ? x + 1 : x,
         y,
-        available,
+        isAvailable,
         preferences: null
       };
       seats.push(seat);
@@ -120,7 +120,7 @@ async function getAmadeusSeats(flight) {
     // convenience.
     x: seat.coordinates.y,
     y: seat.coordinates.x - 1,
-    available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE",
+    isAvailable: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE",
     preferences: null
   }));
 }
