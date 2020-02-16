@@ -80,12 +80,12 @@ async function getMockAmadeusData(seed) {
   for (let y = 0; y < rowCount; y++) {
     for (let x = 0; x < seatsInRow; x++) {
       const number = `${y + 1}${"ABCD"[x]}`;
-      const isAvailable = fillFactor * random() < y / rowCount;
+      const available = fillFactor * random() < y / rowCount;
       const seat = {
         number,
         x: x > 1 ? x + 1 : x,
         y,
-        isAvailable,
+        available,
         preferences: null
       };
       seats.push(seat);
