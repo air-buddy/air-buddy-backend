@@ -18,7 +18,7 @@ async function main() {
         res.status(400).json({ error: 'Missing query parameter "flight".' });
         return;
       }
-      res.json(await getSeats(req.query.flight));
+      res.json(await getSeatData(req.query.flight));
     })
     .post("/seat", async (req, res) => {
       await saveSeatStatus(req.body);
@@ -27,13 +27,17 @@ async function main() {
     .listen(PORT, () => console.log(`Listening on port ${PORT}.`));
 }
 
-async function getSeats(flight) {
+async function getSeatData(flight) {
   const [amadeusSeats, airBuddySeats] = await Promise.all([
     getAmadeusSeats(flight),
     findAllSeatStatus(flight)
   ]);
   const resultSeatsByNumber = new Map();
-  amadeusSeats.forEach(seat => resultSeatsByNumber.set(seat.number, seat));
+  let maxX = 0;
+  amadeusSeats.forEach(seat => {
+    resultSeatsByNumber.set(seat.number, seat);
+    maxX = Math.max(maxX, seat.x);
+  });
   airBuddySeats.forEach(seat => {
     const resultSeat = resultSeatsByNumber.get(seat.number);
     if (!resultSeat) {
@@ -45,7 +49,11 @@ async function getSeats(flight) {
     resultSeat.available = false;
     resultSeat.likesToTalk = seat.likesToTalk;
   });
-  return Array.from(resultSeatsByNumber.values());
+  const seats = Array.from(resultSeatsByNumber.values());
+  return {
+    width: maxX + 1,
+    seats
+  };
 }
 
 async function getAmadeusSeats(flight) {
@@ -69,8 +77,12 @@ async function getAmadeusSeats(flight) {
     const rawSeats = seatmapResponse.data[0].decks[0].seats;
     return rawSeats.map(seat => ({
       number: seat.number,
-      x: seat.coordinates.x,
-      y: seat.coordinates.y,
+      // In Amadeus's response, x and y are switched from what you might expect
+      // (x is the row, so it's visualizing the plane sideways), and the x's are
+      // 1-indexed but the y's are 0-indexed. Normalize these for our
+      // convenience.
+      x: seat.coordinates.y,
+      y: seat.coordinates.x - 1,
       available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE"
     }));
   } catch (e) {
