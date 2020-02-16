@@ -1,0 +1,8 @@
+# OS X
+.DS_Store
+
+# NPM/Yarn
+node_modules
+
+# Jest
+coverage
