@@ -10,7 +10,7 @@ const PORT = 8000;
 const MONGO_HOST = "localhost";
 const MONGO_DB_NAME = "airbuddy";
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 async function main() {
   await connectToMongo();
@@ -43,9 +43,7 @@ async function main() {
 
 async function getSeatData(flight) {
   const [amadeusSeats, airBuddySeats] = await Promise.all([
-    USE_MOCK_DATA
-      ? Promise.resolve(getMockAmadeusData(flight))
-      : getAmadeusSeats(flight),
+    USE_MOCK_DATA ? getMockAmadeusData(flight) : getAmadeusSeats(flight),
     findAllSeatStatus(flight)
   ]);
   const resultSeatsByNumber = new Map();
@@ -72,7 +70,8 @@ async function getSeatData(flight) {
   };
 }
 
-function getMockAmadeusData(seed) {
+async function getMockAmadeusData(seed) {
+  await delay(1000);
   const random = seedrandom(seed);
   const seatsInRow = 4;
   const rowCount = 25;
@@ -139,6 +138,10 @@ function connectToMongo() {
       resolve();
     });
   });
+}
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 main();
