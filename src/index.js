@@ -1,4 +1,5 @@
 const Amadeus = require("amadeus");
+const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const { AMADEUS_API_KEY, AMADEUS_API_SECRET } = require("../secrets.json");
@@ -11,6 +12,7 @@ const MONGO_DB_NAME = "airbuddy";
 async function main() {
   await connectToMongo();
   express()
+    .use(cors())
     .use(express.json())
     .get("/seats", async (req, res) => {
       const { flight } = req.query;
