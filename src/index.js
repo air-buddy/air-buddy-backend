@@ -22,7 +22,7 @@ async function main() {
       }
       res.json(await getSeatData(req.query.flight));
     })
-    .post("/seat", async (req, res) => {
+    .post("/seats", async (req, res) => {
       await saveSeatStatus(req.body);
       res.json({ success: true });
     })
