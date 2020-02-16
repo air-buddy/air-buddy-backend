@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const { AMADEUS_API_KEY, AMADEUS_API_SECRET } = require("../secrets.json");
 const { findAllSeatStatus, saveSeatStatus } = require("./controllers");
 
-const PORT = 3000;
+const PORT = 8000;
 const MONGO_HOST = "localhost";
 const MONGO_DB_NAME = "airbuddy";
 
