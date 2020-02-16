@@ -30,6 +30,7 @@ async function getSeats() {
     );
     const rawSeats = seatmapResponse.data[0].decks[0].seats;
     const seats = rawSeats.map(seat => ({
+      number: seat.number,
       x: seat.coordinates.x,
       y: seat.coordinates.y,
       available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE"
