@@ -10,7 +10,7 @@ const PORT = 8000;
 const MONGO_HOST = "localhost";
 const MONGO_DB_NAME = "airbuddy";
 
-const USE_MOCK_DATA = true;
+const USE_MOCK_DATA = false;
 
 async function main() {
   await connectToMongo();
@@ -99,7 +99,6 @@ async function getAmadeusSeats(flight) {
     clientId: AMADEUS_API_KEY,
     clientSecret: AMADEUS_API_SECRET
   });
-
   const offersResponse = await amadeus.shopping.flightOffersSearch.get({
     originLocationCode: "SFO",
     destinationLocationCode: "LGA",
