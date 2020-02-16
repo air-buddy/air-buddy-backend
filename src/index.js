@@ -24,12 +24,17 @@ async function getSeats() {
       adults: "1"
     });
     const offer = offersResponse.data[0];
-    // console.log(JSON.stringify(offer, null, 2));
     const seatmapResponse = await amadeus.client.post(
       "/v1/shopping/seatmaps",
       JSON.stringify({ data: [offer] })
     );
-    return seatmapResponse.data[0];
+    const rawSeats = seatmapResponse.data[0].decks[0].seats;
+    const seats = rawSeats.map(seat => ({
+      x: seat.coordinates.x,
+      y: seat.coordinates.y,
+      available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE"
+    }));
+    return { seats };
   } catch (e) {
     console.error(e);
     return;
