@@ -10,7 +10,7 @@ const PORT = 8000;
 const MONGO_HOST = "localhost";
 const MONGO_DB_NAME = "airbuddy";
 
-const USE_MOCK_DATA = false;
+const USE_MOCK_DATA = true;
 
 async function main() {
   await connectToMongo();
