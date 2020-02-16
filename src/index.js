@@ -49,7 +49,7 @@ async function getSeatData(flight) {
       return;
     }
     resultSeat.available = false;
-    resultSeat.likesToTalk = seat.likesToTalk;
+    resultSeat.preferences = { likesToTalk: seat.likesToTalk };
   });
   const seats = Array.from(resultSeatsByNumber.values());
   return {
@@ -85,7 +85,8 @@ async function getAmadeusSeats(flight) {
       // convenience.
       x: seat.coordinates.y,
       y: seat.coordinates.x - 1,
-      available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE"
+      available: seat.travelerPricing[0].seatAvailabilityStatus === "AVAILABLE",
+      preferences: null
     }));
   } catch (e) {
     console.error(e);
